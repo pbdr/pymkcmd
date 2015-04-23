@@ -1,0 +1,11 @@
+{
+    "folders":
+    [
+        {
+            "name": "pymkcmd",
+            "path": "..",
+            "folder_exclude_patterns": [],
+            "follow_symlinks": true
+        }
+    ]
+}

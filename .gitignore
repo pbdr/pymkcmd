@@ -1,0 +1,9 @@
+# OS X.
+.DS_Store
+
+# Python.
+__pycache__
+*.pyc
+
+# Sublime Text.
+*.sublime-workspace
