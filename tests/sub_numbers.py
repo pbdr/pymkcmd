@@ -2,7 +2,11 @@
 # CLI: sub_numbers
 
 from pymkcmd import mkcmd, mkant
-from test_funcs import sub_numbers
+
+
+def sub_numbers(int0, float0=0.0):
+    '''Subtract two numbers.'''
+    return int0 - float0
 
 if __name__ == '__main__':
 
@@ -15,6 +19,7 @@ if __name__ == '__main__':
             },
             param_helps={
                 'int0': 'The integer.',
+                'float0': 'The float.'
             },
             desc='This description is added by `pymkcmd.mkant`.'
         ),

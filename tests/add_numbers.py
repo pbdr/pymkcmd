@@ -2,7 +2,11 @@
 # CLI: add_number
 
 from pymkcmd import mkcmd
-from test_funcs import add_numbers
+
+
+def add_numbers(int0: int, float0: float=0.0):
+    '''Add two numbers.'''
+    return int0 + float0
 
 if __name__ == '__main__':
     mkcmd(add_numbers)()
