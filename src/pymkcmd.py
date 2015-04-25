@@ -78,7 +78,9 @@ def mkcmds(funcs, description='',
         # Obtain the function to call and its arguments.
         func = cmd_args.func
         args, kwargs = mk_func_args(func, cmd_args)
-        func(*args, **kwargs)
+
+        ret = func(*args, **kwargs)
+        sys.stdout.write(str(ret) + '\n')
 
     return funcs_cmd
 
