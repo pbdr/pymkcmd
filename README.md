@@ -115,7 +115,7 @@ machine:tests pbdr $ <b>python3 funcs_cmd.py add_numbers 4 --float0=1.23</b>
 5.23
 </pre>
 
-### 2.3 Add Annotations
+### 2.3 Adding Annotations
 
 To make better CLI help messages for unannotated Python 3 functions or
 Python 2 functions, metadata can be added to functions with
@@ -159,4 +159,3 @@ pymkcmd utilizes `inspect` module to gather metadata from functions, and
   [PEP 287](https://www.python.org/dev/peps/pep-0287/), etc.
 - Auto-generated short CLI argument names.
 - Add support for types taking multiple arguments.
-- Append metadata to functions before creating CLIs.
