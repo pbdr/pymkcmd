@@ -30,7 +30,9 @@ def mkcmd(func, doc_format='plain', ant_format='auto'):
 
         # Obtain function arguments.
         args, kwargs = mk_func_args(func, cmd_args)
-        func(*args, **kwargs)
+
+        ret = func(*args, **kwargs)
+        sys.stdout.write(str(ret) + '\n')
 
     return func_cmd
 
