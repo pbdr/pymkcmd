@@ -148,6 +148,7 @@ pymkcmd utilizes `inspect` module to gather metadata from functions, and
 
 ## 4. TODO
 
+- Write return value to standard output.
 - Compatibility for Python 2. (!)
 - Add support for parsing docstrings:
   [PEP 287](https://www.python.org/dev/peps/pep-0287/), etc.

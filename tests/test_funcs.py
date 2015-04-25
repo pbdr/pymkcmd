@@ -1,9 +1,9 @@
 # pymkcmd | dale@pbdr.info | http://pbdr.info
-# Functions for testing.
+# Testing functions.
 
 
 def concat_strings(str0: 'String One.', str1: 'String Two.',
-                   sep: 'The seperator to concatenate the strings.'=' ',):
+                   sep: 'The seperator to concatenate the strings.'=' '):
 
     '''Concatenate two strings with a seperator.'''
 
@@ -20,10 +20,18 @@ def add_numbers(int0: int, float0: float=0.0):
           .format(int0, float0, int0 + float0))
 
 
-def mult_numbers(int0: (int, 'Integer one.'),
+def mult_numbers(int0: (int, 'The integer.'),
                  float0: float=1.0):
 
     '''A test function multiplying two numbers.'''
 
     print('mult_numbers({}, float0={}) = {}'
           .format(int0, float0, int0 * float0))
+
+
+def sub_numbers(int0, float0: 'The float.'=0.0):
+
+    '''A test function subtracting two numbers.'''
+
+    print('sub_numbers({}, float0={}) = {}'
+          .format(int0, float0, int0 - float0))

@@ -5,6 +5,7 @@ import sys
 import inspect
 import argparse
 import logging
+from functools import wraps
 
 
 def mkcmd(func, doc_format='plain', ant_format='auto'):
@@ -114,8 +115,10 @@ def mk_cmd_parser(func, doc_format, ant_format, parser=None):
 
     # ==== CLI description. ====
 
+    func_desc = getattr(func, 'desc', inspect.getdoc(func))
+
     if doc_format == 'plain':
-        cmd_desc = inspect.getdoc(func)
+        cmd_desc = func_desc
     elif doc_format == 'ignore':
         cmd_desc = ''
     else:
@@ -125,22 +128,33 @@ def mk_cmd_parser(func, doc_format, ant_format, parser=None):
 
     # ==== CLI arguments. ====
 
+    param_types = getattr(func, 'param_types', {})
+    param_helps = getattr(func, 'param_helps', {})
     sig = inspect.signature(func)
+
+    # Make a CLI argument for each function parameter.
     for param in sig.parameters.values():
-        # Make a CLI argument for each function parameter.
-        cmd_arg = mk_cmd_arg(param, ant_format)
+
+        param_name = param.name
+        param_type = param_types.get(param_name)
+        param_help = param_helps.get(param_name)
+        cmd_arg = \
+            mk_cmd_arg(param, ant_format,
+                       param_type, param_help)
         parser.add_argument(cmd_arg[0], **cmd_arg[1])
 
     return parser
 
 
-def mk_cmd_arg(param, ant_format):
+def mk_cmd_arg(param, ant_format, param_type, param_help):
 
     '''
     Make a CLI argument for a function parameter.
 
     :param param: The function parameter to make the CLI argument for.
     :param ant_format: See ``mk_cmd_parser``.
+    :param param_type: The parameter type.
+    :param param_help: The parameter help message.
     :returns: The name and the options used to create the CLI argument.
     '''
 
@@ -201,6 +215,12 @@ def mk_cmd_arg(param, ant_format):
     else:
         raise ValueError('Invalid `ant_format` value.')
 
+    if param_type is not None:
+        cmd_type = param_type
+
+    if param_help is not None:
+        cmd_help = param_help
+
     # ==== CLI argument action. ====
 
     cmd_action = 'store'
@@ -243,3 +263,27 @@ def mk_func_args(func, cmd_args):
             kwargs[param_name] = cmd_arg_val
 
     return (args, kwargs)
+
+
+def mkant(func, param_types=None, param_helps=None, desc=None):
+
+    '''
+    Make an annotated copy of a function. Annotations are added
+    as members of the function object.
+
+    :param func: The function to be annotated.
+    :param param_types: A dictionary of parameter data types.
+    :param param_helps: A dictionary of parameter help messages.
+    :param desc: A description of the function.
+    :returns: An annotated copy of the function.
+    '''
+
+    @wraps(func)
+    def ant_func(*args, **kwargs):
+        return func(*args, **kwargs)
+
+    ant_func.param_types = param_types
+    ant_func.param_helps = param_helps
+    ant_func.desc = desc
+
+    return ant_func
