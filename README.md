@@ -7,7 +7,7 @@ Currently pymkcmd only works with Python 3.
 
 ## 1. Installation
 
-An installation scheme is under development. For now just add `src` directory
+An installation method is under development. For now just add `src` directory
 to one of Python's search paths, e.g. `PYTHONPATH` environment variable.
 
 ## 2. Usage
@@ -159,3 +159,6 @@ pymkcmd utilizes `inspect` module to gather metadata from functions, and
   [PEP 287](https://www.python.org/dev/peps/pep-0287/), etc.
 - Auto-generated short CLI argument names.
 - Add support for types taking multiple arguments.
+- An installation method.
+- Revise README and add detailed documentation.
+- Automate unit testing.

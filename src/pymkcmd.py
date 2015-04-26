@@ -8,7 +8,7 @@ import logging
 from functools import wraps
 
 
-def mkcmd(func, doc_format='plain', ant_format='auto'):
+def mkcmd(func, doc_format='plain', ant_format='auto', parse_bool=True):
 
     '''
     Generate a CLI (command line interface) for a function.
@@ -16,10 +16,11 @@ def mkcmd(func, doc_format='plain', ant_format='auto'):
     :param func: The function to generate the CLI for.
     :param doc_format: See ``mk_cmd_parser``.
     :param ant_format: See ``mk_cmd_parser``.
+    :param parse_bool: See ``mk_cmd_arg``.
     :returns: The generated CLI.
     '''
 
-    parser = mk_cmd_parser(func, doc_format, ant_format)
+    parser = mk_cmd_parser(func, doc_format, ant_format, parse_bool)
 
     # The generated CLI.
     def func_cmd(argv=sys.argv[1:]):
@@ -38,7 +39,7 @@ def mkcmd(func, doc_format='plain', ant_format='auto'):
 
 
 def mkcmds(funcs, description='',
-           doc_format='plain', ant_format='auto'):
+           doc_format='plain', ant_format='auto', parse_bool=True):
 
     '''
     Generate a CLI for multiple functions.
@@ -48,6 +49,7 @@ def mkcmds(funcs, description='',
     :param description: The description for the CLI.
     :param doc_format: See ``mk_cmd_parser``.
     :param ant_format: See ``mk_cmd_parser``.
+    :param parse_bool: See ``mk_cmd_arg``.
     :returns: The generated CLI.
     '''
 
@@ -62,7 +64,7 @@ def mkcmds(funcs, description='',
         func_parser = subparsers.add_parser(
             func.__name__,
             formatter_class=argparse.RawDescriptionHelpFormatter)
-        mk_cmd_parser(func, doc_format, ant_format,
+        mk_cmd_parser(func, doc_format, ant_format, parse_bool,
                       parser=func_parser)
         # Associate the function with its corresponding subparser.
         func_parser.set_defaults(func=func)
@@ -85,7 +87,8 @@ def mkcmds(funcs, description='',
     return funcs_cmd
 
 
-def mk_cmd_parser(func, doc_format, ant_format, parser=None):
+def mk_cmd_parser(func, doc_format, ant_format, parse_bool,
+                  parser=None):
 
     '''
     Generate a CLI argument parser for a function.
@@ -104,6 +107,8 @@ def mk_cmd_parser(func, doc_format, ant_format, parser=None):
         - 'auto': Determine automatically.
         - 'str': Convert to a string documenting the parameter.
         - 'ignore': Ignore.
+
+    :param parse_bool: See ``mk_cmd_arg``.
 
     :param parser:
         If a parser is supplied, new arguments will be appended to it.
@@ -144,13 +149,13 @@ def mk_cmd_parser(func, doc_format, ant_format, parser=None):
         param_help = param_helps.get(param_name)
         cmd_arg = \
             mk_cmd_arg(param, ant_format,
-                       param_type, param_help)
+                       param_type, param_help, parse_bool)
         parser.add_argument(cmd_arg[0], **cmd_arg[1])
 
     return parser
 
 
-def mk_cmd_arg(param, ant_format, param_type, param_help):
+def mk_cmd_arg(param, ant_format, param_type, param_help, parse_bool):
 
     '''
     Make a CLI argument for a function parameter.
@@ -159,6 +164,9 @@ def mk_cmd_arg(param, ant_format, param_type, param_help):
     :param ant_format: See ``mk_cmd_parser``.
     :param param_type: The parameter type.
     :param param_help: The parameter help message.
+    :param parse_bool: If ``true``, only the string ``"True"`` will be
+                       parsed as Python boolean `True`. Otherwise use
+                       Python boolean type conversion.
     :returns: The name and the options used to create the CLI argument.
     '''
 
@@ -221,6 +229,12 @@ def mk_cmd_arg(param, ant_format, param_type, param_help):
 
     if param_type is not None:
         cmd_type = param_type
+
+    # If `parse_bool` is enabled, replace `bool` with a
+    # boolean string parser that only recognizes `"True"`
+    # as `True`.
+    if parse_bool and cmd_type == bool:
+        cmd_type = lambda s: s == 'True'
 
     if param_help is not None:
         cmd_help = param_help
