@@ -1,9 +1,13 @@
+# pymkcmd | dale@pbdr.info | http://pbdr.info
+
 # OS X.
 .DS_Store
 
 # Python.
 __pycache__
 *.pyc
+/dist
+*.egg-info
 
 # Sublime Text.
 *.sublime-workspace
