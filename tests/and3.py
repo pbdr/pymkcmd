@@ -10,6 +10,6 @@ def and3(bool0: bool, bool1: bool, bool2: bool):
 
 if __name__ == '__main__':
 
-    # Try `parse_bool=False` and run `python3 add3.py False Fales False`
+    # Try `parse_bool=False` and run `python3 add3.py False False False`
     # to see the difference.
     mkcmd(and3, parse_bool=True)()
